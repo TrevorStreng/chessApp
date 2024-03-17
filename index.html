@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main>
+      <div class="board"></div>
+    </main>
+    <script src="index.js"></script>
+  </body>
+</html>
+
+<style>
+  body {
+    height: 98vh;
+  }
+  main {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+  }
+  .board {
+    width: 55em;
+    height: 50em;
+    display: grid;
+    grid-template-columns: repeat(8, 12.5%);
+    grid-template-rows: repeat(8, 12.5%);
+  }
+  .board > div {
+    width: 100%;
+    height: 100%;
+  }
+
+  .dark {
+    background-color: #769656;
+  }
+
+  .light {
+    background-color: #eeeed2;
+  }
+</style>
