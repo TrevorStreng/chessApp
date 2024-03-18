@@ -14,6 +14,7 @@ function colorSquares() {
     square.classList.add((i + Math.floor(i / 8)) % 2 === 0 ? "dark" : "light");
     square.setAttribute("id", squareLocation);
     board.appendChild(square);
+    square.setAttribute("onclick", "setSelectedSquare(this)");
   }
 }
 
@@ -80,7 +81,7 @@ function addGamePieces() {
 
 function placeBlackPieces(blackPieces) {
   const board = document.querySelector(".board");
-  const squares = board.children;
+  const squares = board.childNodes;
   let blackPiecesPointer = 0;
   let pointerIncrement = true;
   for (let i = 0; i < 16; i++) {
@@ -88,14 +89,20 @@ function placeBlackPieces(blackPieces) {
       // print pawns
       squares[i].innerHTML = `<div class="piece" id="${
         blackPieces[blackPieces.length - 1].name
-      }" onclick="movePiece(this.parentNode, this)">${
+      }" onclick="selectPiece(this)" style="top: ${
+        squares[i].getBoundingClientRect().top
+      } left: ${squares[i].getBoundingClientRect().left}">${
         blackPieces[blackPieces.length - 1].code
       }</div>`;
     } else {
       // loop through other pieces
-      squares[
-        i
-      ].innerHTML = `<div class="piece" id="${blackPieces[blackPiecesPointer].name}" onclick="movePiece(this.parentNode, this)">${blackPieces[blackPiecesPointer].code}</div>`;
+      squares[i].innerHTML = `<div class="piece" id="${
+        blackPieces[blackPiecesPointer].name
+      }" onclick="selectPiece(this)" style="top: ${
+        squares[i].getBoundingClientRect().top
+      } left: ${squares[i].getBoundingClientRect().left}">${
+        blackPieces[blackPiecesPointer].code
+      }</div>`;
       if (blackPieces[blackPiecesPointer].name === "bk") {
         pointerIncrement = false;
         blackPiecesPointer--;
@@ -118,13 +125,19 @@ function placeWhitePieces(whitePieces) {
     if (i < squares.length - 8) {
       squares[i].innerHTML = `<div class="piece" id="${
         whitePieces[whitePieces.length - 1].name
-      }" onclick="movePiece(this.parentNode, this)">${
+      }" onclick="selectPiece(this)" style="top: ${
+        squares[i].getBoundingClientRect().top
+      } left: ${squares[i].getBoundingClientRect().left}">${
         whitePieces[whitePieces.length - 1].code
       }</div>`;
     } else {
-      squares[
-        i
-      ].innerHTML = `<div class="piece" id="${whitePieces[whitePiecesPointer].name}" onclick="movePiece(this.parentNode, this)">${whitePieces[whitePiecesPointer].code}</div>`;
+      squares[i].innerHTML = `<div class="piece" id="${
+        whitePieces[whitePiecesPointer].name
+      }" onclick="selectPiece(this)" style="top: ${
+        squares[i].getBoundingClientRect().top
+      } left: ${squares[i].getBoundingClientRect().left}">${
+        whitePieces[whitePiecesPointer].code
+      }</div>`;
       if (whitePieces[whitePiecesPointer].name === "wk") {
         pointerIncrement = false;
         whitePiecesPointer--;
@@ -138,36 +151,79 @@ function placeWhitePieces(whitePieces) {
   }
 }
 
-let highlightedPiece;
+let selectedPiece;
+// let selectedSquare;
+let possibleMoves = [];
 
-function movePiece(location, piece) {
-  console.log(location, piece);
+function setSelectedSquare(square) {
+  if (selectedPiece && square.childNodes.length === 0) {
+    // selectedSquare = square;
+    movePiece(square);
+  }
+}
+
+function selectPiece(piece) {
+  // selectedSquare = undefined;
+  // make sure player is clicking on their piece only
   if (playerColor === "white" && piece.id.at(0) !== "w") {
     console.log("Can only move your pieces! 😧");
     return;
   }
-  if (highlightedPiece) {
+  // unselect if piece is clicked again
+  if (selectedPiece === piece) {
+    unHighlightPiece();
+    return;
+  }
+  // if a piece is clicked on unselect any selected pieces
+  if (selectedPiece) {
     unHighlightPiece();
   }
+  // select clicked on piece
   highlight(piece);
-  // const board = document.querySelector(".board");
-  // const squares = board.childNodes;
-  // let target;
-  // for (let i = 0; i < squares.length; i++) {
-  //   if (squares[i].id === location) {
-  //     target = squares[i];
-  //   }
-  // }
-  // console.log(target);
+}
+
+function movePiece(selectedSquare) {
+  if (selectedSquare && selectedPiece) {
+    const target = selectedSquare.getBoundingClientRect();
+    const board = document.querySelector(".board").getBoundingClientRect();
+    console.log(selectedPiece);
+
+    selectedPiece.style.left = `${target.left - board.left}px`;
+    selectedPiece.style.top = `${target.top - board.top}px`;
+
+    unHighlightPiece();
+    selectedPiece = undefined;
+  }
 }
 
 function highlight(piece) {
   piece.classList.add("highlight");
-  highlightedPiece = piece;
+  selectedPiece = piece;
+  // showPossibleMoves(piece);
 }
 
 function unHighlightPiece() {
-  highlightedPiece.classList.remove("highlight");
+  selectedPiece.classList.remove("highlight");
+  selectedPiece = undefined;
+}
+
+function showPossibleMoves(piece) {
+  if (piece.id.at(1) === "p") {
+    drawCircles(piece);
+  }
+}
+
+function drawCircles(piece) {
+  const parentId = piece.parentNode.id;
+  const board = document.querySelector(".board");
+  const squares = board.childNodes;
+  for (let i = 0; i < squares.length; i++) {
+    if (squares[i].id === (parseInt(parentId) + 1).toString()) {
+      //make circle here
+      squares[i].innerHTML = `<div class="circle"></div>`;
+      possibleMoves.push(squares[i]);
+    }
+  }
 }
 
 function initGameBoard() {
