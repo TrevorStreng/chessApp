@@ -95,12 +95,17 @@ function placeBlackPieces(blackPieces) {
       const move = (i % 8) * 100;
       piece.style.transform = `translate(${move}%, 100%)`;
       piece.classList.add(`square-${move / 100 + 1}${7}`);
+      piece.classList.add("original-position");
+      const square = document.getElementById(`${move / 100 + 1}${7}`);
+      square.classList.add("contains-piece");
     } else {
       piece.innerHTML = blackPieces[blackPiecesPointer].code;
       piece.setAttribute("id", blackPieces[blackPiecesPointer].name);
       const move = (i % 8) * 100;
       piece.style.transform = `translate(${move}%, 0)`;
       piece.classList.add(`square-${move / 100 + 1}${8}`);
+      const square = document.getElementById(`${move / 100 + 1}${8}`);
+      square.classList.add("contains-piece");
       if (blackPieces[blackPiecesPointer].name === "bk") {
         pointerIncrement = false;
         blackPiecesPointer--;
@@ -132,12 +137,17 @@ function placeWhitePieces(whitePieces) {
       const move = (i % 8) * 100;
       piece.style.transform = `translate(${move}%, 600%)`;
       piece.classList.add(`square-${move / 100 + 1}${2}`);
+      piece.classList.add("original-position"); // this only matters for pawns checking to see if it can move two squares or not
+      const square = document.getElementById(`${move / 100 + 1}${2}`);
+      square.classList.add("contains-piece");
     } else {
       piece.innerHTML = whitePieces[whitePiecesPointer].code;
       piece.setAttribute("id", whitePieces[whitePiecesPointer].name);
       const move = (i % 8) * 100;
       piece.style.transform = `translate(${move}%, 700%)`;
       piece.classList.add(`square-${move / 100 + 1}${1}`);
+      const square = document.getElementById(`${move / 100 + 1}${1}`);
+      square.classList.add("contains-piece");
       if (whitePieces[whitePiecesPointer].name === "wk") {
         pointerIncrement = false;
         whitePiecesPointer--;
@@ -190,19 +200,25 @@ function selectPiece(piece) {
 
 function movePiece(selectedSquare) {
   if (selectedSquare && selectedPiece) {
-    // const target = selectedSquare.getBoundingClientRect();
-    // const board = document.querySelector(".board").getBoundingClientRect();
+    const validMove = checkForValidMove(selectedPiece, selectedSquare);
+    console.log(validMove);
+    if (!validMove) {
+      console.log("not a valid move!!! 💥");
+      return;
+    }
 
-    // selectedPiece.style.left = `${target.left - board.left}px`;
-    // selectedPiece.style.top = `${target.top - board.top}px`;
-
-    // selectedSquare.appendChild(selectedPiece);
-
-    console.log(selectedSquare.id);
     const location = selectedSquare.id;
     selectedPiece.style.transform = `translate(${
       (location.at(0) - 1) * 100
     }%, ${(8 - location.at(1)) * 100}%)`;
+
+    if (selectedPiece.classList.contains("original-position"))
+      selectedPiece.classList.remove("original-position");
+
+    // remove marker from old square and add to new
+    const square = document.getElementById(getPosition(selectedPiece));
+    square.classList.remove("contains-piece");
+    selectedSquare.classList.add("contains-piece");
 
     unHighlightPiece();
     selectedPiece = undefined;
@@ -245,10 +261,3 @@ function initGameBoard() {
 }
 
 initGameBoard();
-
-/* I think I need to re evaluate 
-pieces should all be at top: 0 left: 0
-use transform to move to their needed position
-board is seperate from pieces
-get value of clicked on square from board and add it to pieces class
-*/
