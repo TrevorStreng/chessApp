@@ -1,4 +1,4 @@
-let playerColor = "white";
+let playerColor = "white"; // ^ change this is changing currrent player
 
 function colorSquares() {
   const board = document.querySelector(".board");
@@ -81,28 +81,26 @@ function addGamePieces() {
 
 function placeBlackPieces(blackPieces) {
   const board = document.querySelector(".board");
-  const squares = board.childNodes;
   let blackPiecesPointer = 0;
   let pointerIncrement = true;
+
   for (let i = 0; i < 16; i++) {
+    const piece = document.createElement("div");
+    piece.classList.add("piece");
+    piece.style.width = "12.5%";
+    piece.style.height = "12.5%";
     if (i >= 8) {
-      // print pawns
-      squares[i].innerHTML = `<div class="piece" id="${
-        blackPieces[blackPieces.length - 1].name
-      }" onclick="selectPiece(this)" style="top: ${
-        squares[i].getBoundingClientRect().top
-      } left: ${squares[i].getBoundingClientRect().left}">${
-        blackPieces[blackPieces.length - 1].code
-      }</div>`;
+      piece.innerHTML = blackPieces[blackPieces.length - 1].code;
+      piece.setAttribute("id", blackPieces[blackPieces.length - 1].name);
+      const move = (i % 8) * 100;
+      piece.style.transform = `translate(${move}%, 100%)`;
+      piece.classList.add(`square-${move / 100 + 1}${7}`);
     } else {
-      // loop through other pieces
-      squares[i].innerHTML = `<div class="piece" id="${
-        blackPieces[blackPiecesPointer].name
-      }" onclick="selectPiece(this)" style="top: ${
-        squares[i].getBoundingClientRect().top
-      } left: ${squares[i].getBoundingClientRect().left}">${
-        blackPieces[blackPiecesPointer].code
-      }</div>`;
+      piece.innerHTML = blackPieces[blackPiecesPointer].code;
+      piece.setAttribute("id", blackPieces[blackPiecesPointer].name);
+      const move = (i % 8) * 100;
+      piece.style.transform = `translate(${move}%, 0)`;
+      piece.classList.add(`square-${move / 100 + 1}${8}`);
       if (blackPieces[blackPiecesPointer].name === "bk") {
         pointerIncrement = false;
         blackPiecesPointer--;
@@ -113,31 +111,33 @@ function placeBlackPieces(blackPieces) {
         blackPiecesPointer--;
       }
     }
+    piece.setAttribute("onclick", "selectPiece(this)");
+    board.appendChild(piece);
   }
 }
 
 function placeWhitePieces(whitePieces) {
   const board = document.querySelector(".board");
-  const squares = board.childNodes;
   let whitePiecesPointer = 0;
   let pointerIncrement = true;
-  for (let i = squares.length - 16; i < squares.length; i++) {
-    if (i < squares.length - 8) {
-      squares[i].innerHTML = `<div class="piece" id="${
-        whitePieces[whitePieces.length - 1].name
-      }" onclick="selectPiece(this)" style="top: ${
-        squares[i].getBoundingClientRect().top
-      } left: ${squares[i].getBoundingClientRect().left}">${
-        whitePieces[whitePieces.length - 1].code
-      }</div>`;
+
+  for (let i = 0; i < 16; i++) {
+    const piece = document.createElement("div");
+    piece.classList.add("piece");
+    piece.style.width = "12.5%";
+    piece.style.height = "12.5%";
+    if (i < 8) {
+      piece.innerHTML = whitePieces[whitePieces.length - 1].code;
+      piece.setAttribute("id", whitePieces[whitePieces.length - 1].name);
+      const move = (i % 8) * 100;
+      piece.style.transform = `translate(${move}%, 600%)`;
+      piece.classList.add(`square-${move / 100 + 1}${2}`);
     } else {
-      squares[i].innerHTML = `<div class="piece" id="${
-        whitePieces[whitePiecesPointer].name
-      }" onclick="selectPiece(this)" style="top: ${
-        squares[i].getBoundingClientRect().top
-      } left: ${squares[i].getBoundingClientRect().left}">${
-        whitePieces[whitePiecesPointer].code
-      }</div>`;
+      piece.innerHTML = whitePieces[whitePiecesPointer].code;
+      piece.setAttribute("id", whitePieces[whitePiecesPointer].name);
+      const move = (i % 8) * 100;
+      piece.style.transform = `translate(${move}%, 700%)`;
+      piece.classList.add(`square-${move / 100 + 1}${1}`);
       if (whitePieces[whitePiecesPointer].name === "wk") {
         pointerIncrement = false;
         whitePiecesPointer--;
@@ -148,6 +148,8 @@ function placeWhitePieces(whitePieces) {
         whitePiecesPointer--;
       }
     }
+    piece.setAttribute("onclick", "selectPiece(this)");
+    board.appendChild(piece);
   }
 }
 
@@ -169,6 +171,10 @@ function selectPiece(piece) {
     console.log("Can only move your pieces! 😧");
     return;
   }
+  if (playerColor === "black" && piece.id.at(0) !== "b") {
+    console.log("Can only move your pieces! 😧");
+    return;
+  }
   // unselect if piece is clicked again
   if (selectedPiece === piece) {
     unHighlightPiece();
@@ -184,12 +190,19 @@ function selectPiece(piece) {
 
 function movePiece(selectedSquare) {
   if (selectedSquare && selectedPiece) {
-    const target = selectedSquare.getBoundingClientRect();
-    const board = document.querySelector(".board").getBoundingClientRect();
-    console.log(selectedPiece);
+    // const target = selectedSquare.getBoundingClientRect();
+    // const board = document.querySelector(".board").getBoundingClientRect();
 
-    selectedPiece.style.left = `${target.left - board.left}px`;
-    selectedPiece.style.top = `${target.top - board.top}px`;
+    // selectedPiece.style.left = `${target.left - board.left}px`;
+    // selectedPiece.style.top = `${target.top - board.top}px`;
+
+    // selectedSquare.appendChild(selectedPiece);
+
+    console.log(selectedSquare.id);
+    const location = selectedSquare.id;
+    selectedPiece.style.transform = `translate(${
+      (location.at(0) - 1) * 100
+    }%, ${(8 - location.at(1)) * 100}%)`;
 
     unHighlightPiece();
     selectedPiece = undefined;
@@ -232,3 +245,10 @@ function initGameBoard() {
 }
 
 initGameBoard();
+
+/* I think I need to re evaluate 
+pieces should all be at top: 0 left: 0
+use transform to move to their needed position
+board is seperate from pieces
+get value of clicked on square from board and add it to pieces class
+*/
