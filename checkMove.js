@@ -10,19 +10,19 @@ function checkForValidMove(selectedPiece, selectedSquare) {
   }
   // if knight
   if (selectedPiece.id.at(1) === "n") {
-    return checkPawnMovement(selectedPiece, selectedSquare);
+    return checkKnightMovement(selectedPiece, selectedSquare);
   }
   // if bishop
   if (selectedPiece.id.at(1) === "b") {
-    return checkPawnMovement(selectedPiece, selectedSquare);
+    return checkBishopMovement(selectedPiece, selectedSquare);
   }
   // if queen
   if (selectedPiece.id.at(1) === "q") {
-    return checkPawnMovement(selectedPiece, selectedSquare);
+    return checkQueenMovement(selectedPiece, selectedSquare);
   }
   // if king
   if (selectedPiece.id.at(1) === "k") {
-    return checkPawnMovement(selectedPiece, selectedSquare);
+    return checkKingMovement(selectedPiece, selectedSquare);
   }
 }
 
@@ -67,6 +67,7 @@ function checkPawnMovement(selectedPiece, selectedSquare) {
 }
 
 function checkRookMovement(selectedPiece, selectedSquare) {
+  // ! this can be done more effeciently
   let currentLocation = getPosition(selectedPiece);
   let x = currentLocation.split("")[0];
   x = parseInt(x);
@@ -109,3 +110,55 @@ function checkRookMovement(selectedPiece, selectedSquare) {
   if (yMoves.includes(selectedSquare.id)) return true;
   return false;
 }
+
+function checkKnightMovement(selectedPiece, selectedSquare) {
+  let currentLocation = getPosition(selectedPiece);
+  let x = currentLocation.split("")[0];
+  x = parseInt(x);
+  let y = currentLocation.split("")[1];
+  y = parseInt(y);
+  let moveToX = parseInt(selectedSquare.id.at(0));
+  let moveToY = parseInt(selectedSquare.id.at(1));
+  if (moveToX === x + 1 || moveToX === x - 1) {
+    if (moveToY === y + 2 || moveToY === y - 2) return true;
+  }
+  if (moveToX === x + 2 || moveToX === x - 2) {
+    if (moveToY === y + 1 || moveToY === y - 1) return true;
+  }
+  return false;
+}
+
+function checkBishopMovement(selectedPiece, selectedSquare) {
+  let currentLocation = getPosition(selectedPiece);
+  let x = currentLocation.split("")[0];
+  x = parseInt(x);
+  let y = currentLocation.split("")[1];
+  y = parseInt(y);
+
+  // im thinking check to see if ration is correct 1:1
+  // then check to see if any pieces in the way
+  // check ratio
+  let moveToX = parseInt(selectedSquare.id.at(0));
+  let moveToY = parseInt(selectedSquare.id.at(1));
+  let xTemp = x;
+  let yTemp = y;
+  let xMod = 1;
+  let yMod = 1;
+  if (x > moveToX) xMod = -1;
+  if (y > moveToY) yMod = -1;
+  // it will never be more than 8
+  for (let i = 0; i < 8; i++) {
+    xTemp += xMod;
+    yTemp += yMod;
+    console.log("orig ", x, y);
+    console.log(xTemp, yTemp);
+    const square = document.getElementById(`${xTemp}${yTemp}`);
+    if (square) if (square.classList.contains("contains-piece")) return false;
+    if (xTemp === moveToX && yTemp === moveToY) return true;
+  }
+  return false;
+}
+
+function checkQueenMovement(selectedPiece, selectedSquare) {}
+
+function checkKingMovement(selectedPiece, selectedSquare) {}
