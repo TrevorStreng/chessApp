@@ -74,29 +74,37 @@ function checkRookMovement(selectedPiece, selectedSquare) {
   y = parseInt(y);
   let xMoves = [];
   let yMoves = [];
-  // check x-axis
-  // ! need to check moves in both directions and not include the currentLocation
-  for (let i = 1; i < 8; i++) {
-    const xMov = x + i;
-    console.log(`${xMov}${y}`);
-    const square = document.getElementById(`${xMov}${y}`);
-    if (square.classList.contains("contains-piece")) {
+
+  /* check x-axis */
+  // check left
+  for (let i = x - 1; i > 0; i--) {
+    const square = document.getElementById(`${i}${y}`);
+    if (square.classList.contains("contsains-piece")) {
       break;
     }
-    xMoves.push(`${xMov}${y}`);
+    xMoves.push(`${i}${y}`);
   }
-  // check y-axis
-  for (let i = 1; i < 8; i++) {
-    const yMov = y + i;
-    console.log(`${x}${yMov}`);
-    const square = document.getElementById(`${x}${yMov}`);
-    if (square.classList.contains("contains-piece")) {
-      break;
-    }
-    yMoves.push(`${x}${yMov}`);
+  // check right
+  for (let i = x + 1; i <= 8; i++) {
+    const square = document.getElementById(`${i}${y}`);
+    if (square.classList.contains("contains-piece")) break;
+    xMoves.push(`${i}${y}`);
   }
 
-  console.log("htrhtr", selectedSquare.id);
+  /* check y-axis */
+  //check forward
+  for (let i = y + 1; i < 8; i++) {
+    const square = document.getElementById(`${x}${i}`);
+    if (square.classList.contains("contains-piece")) break;
+    yMoves.push(`${x}${i}`);
+  }
+  //check backward
+  for (let i = y - 1; i > 0; i--) {
+    const square = document.getElementById(`${x}${i}`);
+    if (square.classList.contains("contains-piece")) break;
+    yMoves.push(`${x}${i}`);
+  }
+
   if (xMoves.includes(selectedSquare.id)) return true;
   if (yMoves.includes(selectedSquare.id)) return true;
   return false;

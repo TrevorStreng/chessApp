@@ -201,7 +201,6 @@ function selectPiece(piece) {
 function movePiece(selectedSquare) {
   if (selectedSquare && selectedPiece) {
     const validMove = checkForValidMove(selectedPiece, selectedSquare);
-    console.log(validMove);
     if (!validMove) {
       console.log("not a valid move!!! 💥");
       return;
@@ -215,8 +214,12 @@ function movePiece(selectedSquare) {
     if (selectedPiece.classList.contains("original-position"))
       selectedPiece.classList.remove("original-position");
 
+    const piecePosition = getPosition(selectedPiece);
+    const square = document.getElementById(piecePosition);
+    // update piece's position in class
+    selectedPiece.classList.remove(`square-${piecePosition}`);
+    selectedPiece.classList.add(`square-${selectedSquare.id}`);
     // remove marker from old square and add to new
-    const square = document.getElementById(getPosition(selectedPiece));
     square.classList.remove("contains-piece");
     selectedSquare.classList.add("contains-piece");
 
