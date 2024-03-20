@@ -1,4 +1,13 @@
-// let selectedPiece;
+let gameBoard = [
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+];
 function checkForValidMove(selectedPiece, selectedSquare) {
   // if pawn
   if (selectedPiece.id.at(1) === "p") {
@@ -162,3 +171,7 @@ function checkBishopMovement(selectedPiece, selectedSquare) {
 function checkQueenMovement(selectedPiece, selectedSquare) {}
 
 function checkKingMovement(selectedPiece, selectedSquare) {}
+
+/*
+Implement game board using 2d array instead of marking pieces in html
+*/
