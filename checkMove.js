@@ -163,6 +163,7 @@ function checkBishopMovement(selectedPiece, selectedSquare) {
     console.log(xTemp, yTemp);
     const square = document.getElementById(`${xTemp}${yTemp}`);
     if (square) if (square.classList.contains("contains-piece")) return false;
+    // if (square) if (gameBoard[xTemp][yTemp] !== 0) return false; // probably something like this
     if (xTemp === moveToX && yTemp === moveToY) return true;
   }
   return false;
