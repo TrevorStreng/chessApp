@@ -138,6 +138,7 @@ function placeWhitePieces(whitePieces) {
       piece.style.transform = `translate(${move}%, 600%)`;
       piece.classList.add(`square-${move / 100 + 1}${2}`);
       piece.classList.add("original-position"); // this only matters for pawns checking to see if it can move two squares or not
+      // gameBoard[][] = 1
       const square = document.getElementById(`${move / 100 + 1}${2}`);
       square.classList.add("contains-piece");
     } else {

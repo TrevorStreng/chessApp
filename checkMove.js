@@ -1,3 +1,5 @@
+// white pieces 1 black pieces 2 maybe
+
 let gameBoard = [
   [0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
