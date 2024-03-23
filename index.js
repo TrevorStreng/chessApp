@@ -79,33 +79,39 @@ function addGamePieces() {
   placeWhitePieces(pieces.whitePieces);
 }
 
+// ! need to make each piece have its own unique identifier
+
 function placeBlackPieces(blackPieces) {
   const board = document.querySelector(".board");
   let blackPiecesPointer = 0;
   let pointerIncrement = true;
 
+  // ^ Black pieces - 6 === whiter pieces
   for (let i = 0; i < 16; i++) {
     const piece = document.createElement("div");
     piece.classList.add("piece");
     piece.style.width = "12.5%";
     piece.style.height = "12.5%";
     if (i >= 8) {
+      // place pawns
       piece.innerHTML = blackPieces[blackPieces.length - 1].code;
       piece.setAttribute("id", blackPieces[blackPieces.length - 1].name);
       const move = (i % 8) * 100;
       piece.style.transform = `translate(${move}%, 100%)`;
       piece.classList.add(`square-${move / 100 + 1}${7}`);
-      piece.classList.add("original-position");
-      const square = document.getElementById(`${move / 100 + 1}${7}`);
-      square.classList.add("contains-piece");
+      // piece.classList.add("original-position");
+      // const square = document.getElementById(`${move / 100 + 1}${7}`);
+      // square.classList.add("contains-piece");
+      gameBoard[1][i % 8] = blackPieces[blackPieces.length - 1].name;
     } else {
       piece.innerHTML = blackPieces[blackPiecesPointer].code;
       piece.setAttribute("id", blackPieces[blackPiecesPointer].name);
       const move = (i % 8) * 100;
       piece.style.transform = `translate(${move}%, 0)`;
       piece.classList.add(`square-${move / 100 + 1}${8}`);
-      const square = document.getElementById(`${move / 100 + 1}${8}`);
-      square.classList.add("contains-piece");
+      // const square = document.getElementById(`${move / 100 + 1}${8}`);
+      // square.classList.add("contains-piece");
+      gameBoard[0][i % 8] = blackPieces[blackPiecesPointer].name;
       if (blackPieces[blackPiecesPointer].name === "bk") {
         pointerIncrement = false;
         blackPiecesPointer--;
@@ -119,6 +125,7 @@ function placeBlackPieces(blackPieces) {
     piece.setAttribute("onclick", "selectPiece(this)");
     board.appendChild(piece);
   }
+  console.log(gameBoard);
 }
 
 function placeWhitePieces(whitePieces) {
@@ -132,23 +139,27 @@ function placeWhitePieces(whitePieces) {
     piece.style.width = "12.5%";
     piece.style.height = "12.5%";
     if (i < 8) {
+      // place pawns
       piece.innerHTML = whitePieces[whitePieces.length - 1].code;
       piece.setAttribute("id", whitePieces[whitePieces.length - 1].name);
       const move = (i % 8) * 100;
       piece.style.transform = `translate(${move}%, 600%)`;
       piece.classList.add(`square-${move / 100 + 1}${2}`);
-      piece.classList.add("original-position"); // this only matters for pawns checking to see if it can move two squares or not
-      // gameBoard[][] = 1
-      const square = document.getElementById(`${move / 100 + 1}${2}`);
-      square.classList.add("contains-piece");
+      // piece.classList.add("original-position"); // this only matters for pawns checking to see if it can move two squares or not
+      // const square = document.getElementById(`${move / 100 + 1}${2}`);
+      // square.classList.add("contains-piece");
+      gameBoard[gameBoard.length - 2][i % 8] =
+        whitePieces[whitePieces.length - 1].name;
     } else {
       piece.innerHTML = whitePieces[whitePiecesPointer].code;
       piece.setAttribute("id", whitePieces[whitePiecesPointer].name);
       const move = (i % 8) * 100;
       piece.style.transform = `translate(${move}%, 700%)`;
       piece.classList.add(`square-${move / 100 + 1}${1}`);
-      const square = document.getElementById(`${move / 100 + 1}${1}`);
-      square.classList.add("contains-piece");
+      // const square = document.getElementById(`${move / 100 + 1}${1}`);
+      // square.classList.add("contains-piece");
+      gameBoard[gameBoard.length - 1][i % 8] =
+        whitePieces[whitePiecesPointer].name;
       if (whitePieces[whitePiecesPointer].name === "wk") {
         pointerIncrement = false;
         whitePiecesPointer--;
@@ -212,21 +223,25 @@ function movePiece(selectedSquare) {
       (location.at(0) - 1) * 100
     }%, ${(8 - location.at(1)) * 100}%)`;
 
-    if (selectedPiece.classList.contains("original-position"))
-      selectedPiece.classList.remove("original-position");
+    // if (selectedPiece.classList.contains("original-position"))
+    //   selectedPiece.classList.remove("original-position");
 
     const piecePosition = getPosition(selectedPiece);
-    const square = document.getElementById(piecePosition);
+    // const square = document.getElementById(piecePosition);
     // update piece's position in class
     selectedPiece.classList.remove(`square-${piecePosition}`);
     selectedPiece.classList.add(`square-${selectedSquare.id}`);
     // remove marker from old square and add to new
-    square.classList.remove("contains-piece");
-    selectedSquare.classList.add("contains-piece");
+    // square.classList.remove("contains-piece");
+    // selectedSquare.classList.add("contains-piece");
+    // move piece gameBoard
+    console.log(selectedPiece);
+    gameBoard[piecePosition.at(1)][piecePosition.at(0)] = selectedPiece.id;
 
     unHighlightPiece();
     selectedPiece = undefined;
   }
+  console.log(gameBoard);
 }
 
 function highlight(piece) {

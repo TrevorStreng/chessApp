@@ -56,6 +56,7 @@ function checkPawnMovement(selectedPiece, selectedSquare) {
   move1[1] += 1;
   move1 = move1.join("");
   moves.push(move1);
+  // if (selectedPiece.classList.contains("original-position")) {
   if (selectedPiece.classList.contains("original-position")) {
     let move2 = currentLocation.split("");
     move2[1] = parseInt(move2[1]);
