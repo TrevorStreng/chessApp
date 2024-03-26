@@ -91,9 +91,11 @@ function checkRookMovement(selectedPiece, selectedSquare) {
   /* check x-axis */
   // check left
   for (let i = x - 1; i > 0; i--) {
+    if (gameBoard[y][i] !== 0) {
+      break;
+    }
     const square = document.getElementById(`${i}${y}`);
     if (square.classList.contains("contsains-piece")) {
-      break;
     }
     xMoves.push(`${i}${y}`);
   }
