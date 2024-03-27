@@ -126,7 +126,7 @@ function placeBlackPieces(blackPieces) {
     piece.setAttribute("onclick", "selectPiece(this)");
     board.appendChild(piece);
   }
-  console.log(gameBoard);
+  // console.log(gameBoard);
 }
 
 function placeWhitePieces(whitePieces) {
@@ -212,6 +212,7 @@ function selectPiece(piece) {
 }
 
 function movePiece(selectedSquare) {
+  // ! still need to reset the old position to 0 and fix the gameBoard position
   if (selectedSquare && selectedPiece) {
     const validMove = checkForValidMove(selectedPiece, selectedSquare);
     if (!validMove) {
@@ -232,18 +233,18 @@ function movePiece(selectedSquare) {
     // update piece's position in class
     selectedPiece.classList.remove(`square-${piecePosition}`);
     selectedPiece.classList.add(`square-${selectedSquare.id}`);
-    // remove marker from old square and add to new
-    // square.classList.remove("contains-piece");
-    // selectedSquare.classList.add("contains-piece");
-    // move piece gameBoard
-    console.log(selectedPiece);
-    gameBoard[piecePosition.at(1)][piecePosition.at(0)] = selectedPiece.id;
+    // remove marker from old square and add to new on gameBaord
+    gameBoard[gameBoard.length - parseInt(selectedSquare.id.at(1))][
+      selectedSquare.id.at(0) - 1
+    ] = selectedPiece.id;
+    gameBoard[gameBoard.length - parseInt(piecePosition.at(1))][
+      piecePosition.at(0) - 1
+    ] = 0;
 
     unHighlightPiece();
     selectedPiece = undefined;
   }
-  console.log(gameBoard);
-  displayGameBoard();
+  displayGameBoard(); // ! for development
 }
 
 function highlight(piece) {
