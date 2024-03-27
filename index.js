@@ -1,4 +1,5 @@
 let playerColor = "white"; // ^ change this is changing currrent player
+let pieceCnt = 1;
 
 function colorSquares() {
   const board = document.querySelector(".board");
@@ -242,6 +243,7 @@ function movePiece(selectedSquare) {
     selectedPiece = undefined;
   }
   console.log(gameBoard);
+  displayGameBoard();
 }
 
 function highlight(piece) {
@@ -274,9 +276,22 @@ function drawCircles(piece) {
   }
 }
 
+function displayGameBoard() {
+  const gb = document.querySelector(".gameBoard");
+  gb.innerHTML = "";
+  for (let i = 0; i < gameBoard.length; i++) {
+    const row = document.createElement("div");
+    row.innerHTML = `<div>${gameBoard[i]}</div>`;
+    gb.appendChild(row);
+  }
+}
+
 function initGameBoard() {
   colorSquares();
   addGamePieces();
+  displayGameBoard();
 }
 
 initGameBoard();
+
+// ! maybe use local storage to save game state
