@@ -149,9 +149,6 @@ function checkBishopMovement(selectedPiece, selectedSquare) {
   let y = currentLocation.split("")[1];
   y = parseInt(y);
 
-  // im thinking check to see if ration is correct 1:1
-  // then check to see if any pieces in the way
-  // check ratio
   let moveToX = parseInt(selectedSquare.id.at(0));
   let moveToY = parseInt(selectedSquare.id.at(1));
   let xTemp = x;
@@ -160,15 +157,13 @@ function checkBishopMovement(selectedPiece, selectedSquare) {
   let yMod = 1;
   if (x > moveToX) xMod = -1;
   if (y > moveToY) yMod = -1;
+
   // it will never be more than 8
   for (let i = 0; i < 8; i++) {
     xTemp += xMod;
     yTemp += yMod;
-    console.log("orig ", x, y);
-    console.log(xTemp, yTemp);
-    const square = document.getElementById(`${xTemp}${yTemp}`);
-    if (square) if (square.classList.contains("contains-piece")) return false;
-    // if (square) if (gameBoard[xTemp][yTemp] !== 0) return false; // probably something like this
+
+    if (gameBoard[gameBoard.length - yTemp][xTemp - 1] !== 0) return false; // probably something like this
     if (xTemp === moveToX && yTemp === moveToY) return true;
   }
   return false;
