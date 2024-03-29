@@ -49,33 +49,24 @@ function checkPawnMovement(selectedPiece, selectedSquare) {
 
   let currentLocation = getPosition(selectedPiece);
 
-  // get list of possible moves
-  let moves = [];
-  let move1 = currentLocation.split("");
-  move1[1] = parseInt(move1[1]);
-  move1[1] += 1;
-  move1 = move1.join("");
-  moves.push(move1);
-  // if (selectedPiece.classList.contains("original-position")) {
-  if (selectedPiece.classList.contains("original-position")) {
-    let move2 = currentLocation.split("");
-    move2[1] = parseInt(move2[1]);
-    move2[1] += 2;
-    move2 = move2.join("");
-    moves.push(move2);
-  }
+  let x = parseInt(currentLocation.at(0));
+  let y = parseInt(currentLocation.at(1));
 
-  // get allowed moves
-  // checks if moves array has any pieces on it and slice everything after
-  for (let i = 0; i < moves.length; i++) {
-    const square = document.getElementById(`${moves[i]}`);
-    if (square.classList.contains("contains-piece")) {
-      moves.slice(i, moves.length - 1);
+  let newX = parseInt(selectedSquare.id.at(0));
+  let newY = parseInt(selectedSquare.id.at(1));
+
+  if (newX !== x) return false;
+
+  if (y === 2) {
+    if (newY === y + 2) {
+      if (gameBoard[gameBoard.length - y - 2][x - 1] !== 0) return false;
+      else return true;
     }
   }
 
-  if (moves.includes(selectedSquare.id)) return true;
-  return false;
+  if (newY !== y + 1) return false;
+
+  return true;
 }
 
 function checkRookMovement(selectedPiece, selectedSquare) {
