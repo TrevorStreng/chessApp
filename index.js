@@ -1,3 +1,5 @@
+// TODO: save game state in local storage and reload if needed
+
 let playerColor = "white"; // ^ change this is changing currrent player
 let pieceCnt = 1;
 
@@ -225,11 +227,8 @@ function movePiece(selectedSquare) {
       (location.at(0) - 1) * 100
     }%, ${(8 - location.at(1)) * 100}%)`;
 
-    // if (selectedPiece.classList.contains("original-position"))
-    //   selectedPiece.classList.remove("original-position");
 
     const piecePosition = getPosition(selectedPiece);
-    // const square = document.getElementById(piecePosition);
     // update piece's position in class
     selectedPiece.classList.remove(`square-${piecePosition}`);
     selectedPiece.classList.add(`square-${selectedSquare.id}`);

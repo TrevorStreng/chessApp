@@ -70,50 +70,36 @@ function checkPawnMovement(selectedPiece, selectedSquare) {
 }
 
 function checkRookMovement(selectedPiece, selectedSquare) {
-  // ! this can be done more effeciently
+  // TODO: this can be done more effeciently
   let currentLocation = getPosition(selectedPiece);
   let x = currentLocation.split("")[0];
   x = parseInt(x);
   let y = currentLocation.split("")[1];
   y = parseInt(y);
-  let xMoves = [];
-  let yMoves = [];
 
-  /* check x-axis */
-  // check left
-  for (let i = x - 1; i > 0; i--) {
-    if (gameBoard[y][i] !== 0) {
-      break;
+  let moveToX = parseInt(selectedSquare.id.at(0));
+  let moveToY = parseInt(selectedSquare.id.at(1));
+
+  let moveX = x - moveToX !== 0 ? true : false
+  let moveY = y - moveToY !== 0 ? true : false
+
+  if(moveX && moveY) return false
+
+  let xMod = 1;
+  let yMod = 1;
+  if (x > moveToX) xMod = -1;
+  if (y > moveToY) yMod = -1;
+
+  for(let i = 0; i < gameBoard.length; i++) {
+    if(moveX) {
+      x += xMod
+    } else {
+      y += yMod
     }
-    const square = document.getElementById(`${i}${y}`);
-    if (square.classList.contains("contsains-piece")) {
-    }
-    xMoves.push(`${i}${y}`);
-  }
-  // check right
-  for (let i = x + 1; i <= 8; i++) {
-    const square = document.getElementById(`${i}${y}`);
-    if (square.classList.contains("contains-piece")) break;
-    xMoves.push(`${i}${y}`);
-  }
 
-  /* check y-axis */
-  //check forward
-  for (let i = y + 1; i < 8; i++) {
-    const square = document.getElementById(`${x}${i}`);
-    if (square.classList.contains("contains-piece")) break;
-    yMoves.push(`${x}${i}`);
+    if (gameBoard[gameBoard.length - y][x - 1] !== 0) return false;
+    if (x === moveToX && y === moveToY) return true;
   }
-  //check backward
-  for (let i = y - 1; i > 0; i--) {
-    const square = document.getElementById(`${x}${i}`);
-    if (square.classList.contains("contains-piece")) break;
-    yMoves.push(`${x}${i}`);
-  }
-
-  if (xMoves.includes(selectedSquare.id)) return true;
-  if (yMoves.includes(selectedSquare.id)) return true;
-  return false;
 }
 
 function checkKnightMovement(selectedPiece, selectedSquare) {
@@ -154,16 +140,74 @@ function checkBishopMovement(selectedPiece, selectedSquare) {
     xTemp += xMod;
     yTemp += yMod;
 
-    if (gameBoard[gameBoard.length - yTemp][xTemp - 1] !== 0) return false; // probably something like this
+    if (gameBoard[gameBoard.length - yTemp][xTemp - 1] !== 0) return false;
     if (xTemp === moveToX && yTemp === moveToY) return true;
   }
   return false;
 }
 
-function checkQueenMovement(selectedPiece, selectedSquare) {}
+function checkQueenMovement(selectedPiece, selectedSquare) {
+  let currentLocation = getPosition(selectedPiece);
+  let x = currentLocation.split("")[0];
+  x = parseInt(x);
+  let y = currentLocation.split("")[1];
+  y = parseInt(y);
 
-function checkKingMovement(selectedPiece, selectedSquare) {}
+  let moveToX = parseInt(selectedSquare.id.at(0));
+  let moveToY = parseInt(selectedSquare.id.at(1));
+  let xTemp = x;
+  let yTemp = y;
+  // mods 'modifiers' are checking to see if needing to move forward or backwards
+  let xMod = 1;
+  let yMod = 1;
+  if (x > moveToX) xMod = -1;
+  if (y > moveToY) yMod = -1;
+
+  // check to see if moving in x direction, y directrion, or diagnol
+  let veritcal = x - moveToX === 0 ? true : false;
+  let horizontal = y - moveToY === 0 ? true : false;
+  let diagnol = false;
+  if(!veritcal && !horizontal) diagnol = true
+
+  for(let i = 0; i < 8; i++) {
+    if(diagnol) {
+      xTemp += xMod;
+      yTemp += yMod;
+    } else if(veritcal) {
+      yTemp += yMod
+    } else if(horizontal) {
+      xTemp += xMod
+    }
+
+    if (gameBoard[gameBoard.length - yTemp][xTemp - 1] !== 0) return false;
+    if (xTemp === moveToX && yTemp === moveToY) return true;
+  }
+  return false
+}
+
+function checkKingMovement(selectedPiece, selectedSquare) {
+  let currentLocation = getPosition(selectedPiece);
+  let x = currentLocation.split("")[0];
+  x = parseInt(x);
+  let y = currentLocation.split("")[1];
+  y = parseInt(y);
+
+  let moveToX = parseInt(selectedSquare.id.at(0));
+  let moveToY = parseInt(selectedSquare.id.at(1));
+
+  let validX = false;
+  let validY = false;
+  if(moveToX === x + 1 || moveToX === x - 1 || moveToX === x) validX = true
+  if(moveToY === y + 1 || moveToY === y - 1 || moveToY === y) validY = true
+
+  return validX && validY
+}
+
+function takePiece() {
+  
+}
 
 /*
-Implement game board using 2d array instead of marking pieces in html
+check to see if a piece is needed to be taken.
+check if piece.name.at(0) !== to other piece 
 */
