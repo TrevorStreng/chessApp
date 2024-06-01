@@ -47,26 +47,59 @@ function checkPawnMovement(selectedPiece, selectedSquare) {
   // &This only checks for current players moves
   // ! still need to check if any pieces are in the way
 
+  // let currentLocation = getPosition(selectedPiece);
+
+  // let x = parseInt(currentLocation.at(0));
+  // let y = parseInt(currentLocation.at(1));
+
+  // let newX = parseInt(selectedSquare.id.at(0));
+  // let newY = parseInt(selectedSquare.id.at(1));
+
+  // if (newX !== x) return false;
+
+  // if (y === 2) {
+  //   if (newY === y + 2) {
+  //     if (gameBoard[gameBoard.length - y - 2][x - 1] !== 0) return false;
+  //     else return true;
+  //   }
+  // }
+
+  // if (newY !== y + 1) return false;
+
+  // return true;
+
+  // needs to only  move forward
+  // needs to work for both players
+  // needs to be able to move two places at first
+
   let currentLocation = getPosition(selectedPiece);
 
   let x = parseInt(currentLocation.at(0));
   let y = parseInt(currentLocation.at(1));
 
-  let newX = parseInt(selectedSquare.id.at(0));
-  let newY = parseInt(selectedSquare.id.at(1));
+  // ! this only allows for player to be white
 
-  if (newX !== x) return false;
+  // if initPosition then allow to move 2 spaces
+  let initPosition = false;
 
-  if (y === 2) {
-    if (newY === y + 2) {
-      if (gameBoard[gameBoard.length - y - 2][x - 1] !== 0) return false;
-      else return true;
-    }
+  if(selectedPiece.id.startsWith('w') && y === 2) initPosition = true
+  if(selectedPiece.id.startsWith('b') && y === gameBoard.length - 1) initPosition = true
+
+  let moveToX = parseInt(selectedSquare.id.at(0));
+  let moveToY = parseInt(selectedSquare.id.at(1));
+
+  let moveX = x === moveToX ? true : false
+  let moveY = false;
+  if(selectedPiece.id.startsWith('w')) {
+    if(y + 1 === moveToY) moveY = true
+    if(initPosition && y + 2 === moveToY) moveY = true
+  } else {
+    if(y - 1 === moveToY) moveY = true
+    if(initPosition && y - 2 === moveToY) moveY = true
   }
 
-  if (newY !== y + 1) return false;
 
-  return true;
+  return moveX && moveY
 }
 
 function checkRookMovement(selectedPiece, selectedSquare) {

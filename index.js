@@ -1,6 +1,7 @@
 // TODO: save game state in local storage and reload if needed
 
 let playerColor = "white"; // ^ change this is changing currrent player
+let whiteMove = true
 let pieceCnt = 1;
 
 function colorSquares() {
@@ -192,11 +193,11 @@ function setSelectedSquare(square) {
 function selectPiece(piece) {
   // selectedSquare = undefined;
   // make sure player is clicking on their piece only
-  if (playerColor === "white" && piece.id.at(0) !== "w") {
+  if (whiteMove && piece.id.at(0) !== "w") {
     console.log("Can only move your pieces! 😧");
     return;
   }
-  if (playerColor === "black" && piece.id.at(0) !== "b") {
+  if (!whiteMove && piece.id.at(0) !== "b") {
     console.log("Can only move your pieces! 😧");
     return;
   }
@@ -242,6 +243,7 @@ function movePiece(selectedSquare) {
 
     unHighlightPiece();
     selectedPiece = undefined;
+    whiteMove = !whiteMove
   }
   displayGameBoard(); // ! for development
 }
